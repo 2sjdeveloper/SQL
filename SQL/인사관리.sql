@@ -435,5 +435,51 @@ from employees
 where upper (substr(last_name, 1, 1)) in ('J', 'A', 'M')
 order by 1;
 
-5. 커밋 됐나?
+--2. 날짜함수
+select sysdate
+from dual;
 
+--2.2 날짜 연산
+select last_name, (sysdate-hire_date)/7 as weeks
+from employees
+where department_id = 90;
+
+--2.3 날짜 함수
+select employee_id, hire_date,
+       months_between (sysdate, hire_date) tenure,
+       add_months(hire_date, 6) review,
+       next_day(hire_date, '금'),
+       last_day(hire_date)
+from   employees;
+
+select round(sysdate, 'YEAR'), --7월1일0시 기준으로 년도 반올림
+       round(sysdate, 'MONTH'), --16일 0시 기준으로 월 반올림
+       round(sysdate, 'DAY'), --수요일 낮 12시 기준으로 일주일 반올림
+       round(sysdate, 'DD') --낮 12시 기준으로 하루 반올림
+from dual;
+       
+select trunc(sysdate, 'YEAR'), 
+       trunc(sysdate, 'MONTH'),
+       trunc(sysdate, 'DAY'),
+       trunc(sysdate, 'DD')
+from dual;
+
+
+---변환함수 I
+--1. 데이터 유형 변환
+--암시적 데이터 유형 변환
+
+select*
+from employees
+where employee_id = '101';
+
+--2.1 날짜에 to_char 함수 사용
+
+alter session set
+nls_date_language = american;
+
+select employee_id, to_char(hire_date, ' MM/YY') month_hired --원래 형식은 yy/mm/dd 인데 mm/yy로 형식 변경
+from employees;
+
+select last_name, to_char(hire_date, 'fm DD MONTH YYYY') --fm 이 있고 없고 결과가 다름.
+from employees;
