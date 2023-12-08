@@ -370,3 +370,68 @@ from dual;
 --4.2 대소문자 조작함수
 select 'The job id for ' || upper(last_name)|| ' is ' ||lower(job_id) as "EMPLOYEE DETAILS"
 from employees;
+
+select employee_id, last_name, department_id
+from employees
+where lower(last_name) = 'higgins';
+
+--문자함수 II
+--1.2 문자조작함수
+
+--SUBSTR
+select last_name, substr(last_name, -3, 2) --뒤에서 세번째부터 2글자.
+from employees
+where department_id = 90;
+
+
+select employee_id, concat(first_name, last_name) name, job_id, length (last_name), instr(last_name, 'a') "contains 'a'?"
+from employees
+where substr(job_id, 4) = 'REP';
+
+--LTMRIM
+select ltrim('yyedaymy', 'yea')
+from dual;
+
+--RTRIM
+select rtrim('yyedaymy', 'yea')
+from dual;
+
+
+--숫자함수와 날짜함수
+select round(345.678) as round1,
+       round(345.678, 0) as round2,
+       round(345.678, 1) as round3,
+       round(345.678, -1) as round4
+from dual;
+
+select trunc(345.678) as trunc1,
+       trunc(345.678, 0) as trunc2,
+       trunc(345.678, 1) as trunc3,
+       trunc(345.678, -1) as trunc4
+from dual;
+
+select last_name, salary, mod(salary, 5000)
+from employees;
+
+--문제풀기
+1. 현재 날짜를 표시하는 질의를 작성하고 열 레이블을 Date로 지정하시오.
+select sysdate "Date"
+from dual;
+
+2. 각 사원에 대해 사원 번호, 이름, 급여 및 15% 인상된 급여를 정수로 표시하시오. 인상된 급여 열의 레이블을 New Salary로 지정하시오. 
+select *
+from employees;
+
+select employee_id, last_name, salary, round(salary*1.15) as "New Salary"
+from employees;
+
+3. 2번 질의를 수정하여 새 급여에서 이전 급여를 빼는 새 열을 추가하고 레이블을 Increase로 지정하고 수정한 질의를 실행하시오.
+select employee_id, last_name, salary, round(salary*1.15) as "New Salary", round(salary*1.15)-salary as "Increase"
+from employees;
+
+4. 이름이 J, A 또는 M으로 시작하는 모든 사원의 이름(대문자 표시) 및 이름 길이를 표시하는 질의를 작성하고 각열에 적합한 레이블을 지정하시오. 결과를 사원의 이름에 따라 정렬하시오.
+select upper(last_name) as "name", length(last_name) as "name_length"
+from employees
+where upper (substr(last_name, 1, 1)) in ('J', 'A', 'M')
+order by 1;
+
