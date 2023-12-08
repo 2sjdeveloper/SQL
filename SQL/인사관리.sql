@@ -483,3 +483,121 @@ from employees;
 
 select last_name, to_char(hire_date, 'fm DD MONTH YYYY') --fm 이 있고 없고 결과가 다름.
 from employees;
+
+select last_name, to_char(hire_date, 'fm Ddspth "of" Month YYYY fmHH:MI:SS AM') --am, pm 아무거나 써도 됨. "문자 반복"은 큰따옴표
+from employees;
+
+--2.2 숫자에 to_char 함수 사용
+select to_char(salary, '$99,999.00') salary
+from employees;
+
+
+--변환함수 II
+
+select to_number('$3,400', '$99,999')
+from dual;
+
+--2. to_date
+select to_date('2010년, 02월', 'YYYY"년", MM"월"')
+from dual;
+
+--사원들 중에서 2005년 7월 1일 이훟에 입사한 사원의 이름과 입사일을 출력.
+select last_name, hire_date
+from employees
+where hire_date > to_date('2005년 07월 01일', 'YYYY"년" MM"월" DD"일"');
+
+select last_name, hire_date
+from employees
+where hire_date > to_date('05/07/01', 'fxYY/MM/DD'); --fx를 붙이면 앞의 형식문과 무조건 같은 형식으로 적어줘야됨. 아니면 YY-MM-DD 도 됨.
+
+
+--일반 함수와 중첩 함수
+--1. nvl 함수
+select last_name, salary, nvl(commission_pct, 0),
+       (salary*12) + (salary*12*nvl(commission_pct, 0)) as an_sal
+from employees;
+
+select last_name, salary, nvl(commission_pct, '보너스 없음') --(commission_pct, '보너스 없음') 이 두개 타입이 숫자, 문자타입으로 달라서 실행 안됨.
+from employees;
+
+select last_name, salary, nvl(to_char (commission_pct), '보너스 없음') -- 타입 일치시켜줌. 
+from employees;
+
+--2. nvl2 함수
+select last_name, salary, commission_pct,
+       nvl2(commission_pct, 'SAL+COMM', 'SAL') income
+from employees;
+
+--3. nullif 함수
+select first_name, length(first_name) "expr1",
+       last_name, length(last_name) "expr2",
+       nullif(length(first_name), length(last_name)) result
+from employees;
+
+--5. 조건표현식
+select last_name, job_id, salary,
+       case job_id when 'IT_PROG'  then 1.10*salary
+                   when 'ST_CLERK' then 1.15*salary
+                   when 'SA_REP'   then 1.20*salary
+                --when job_id='SA_REP'   then 1.20*salary 이렇게도 가능.
+                   else salary
+       end "REVISED_SALARY" --
+from employees;
+
+select last_name, salary,
+       case when salary<5000  then 'Low'
+            when salary<10000 then 'Medium'
+            when salary<20000 then 'Good'
+                              else 'Excellent'
+       end qualified_salary
+from employees;
+
+-- 5.3 decode 함수
+select last_name, job_id, salary,
+       decode(job_id, 'IT_PROG',  1.10*salary,
+                      'ST_CLERK', 1.15*salary,
+                      'SA_REP',   1.20*salary,
+                                  salary)
+        REVISE_SALARY
+from employees;
+
+
+--6. 중첩함수
+
+--문제 5. 각 사원의 이름을 표시하고 근무 달 수(입사일로부터 현재까지의 달 수)를 계산하여 열 레이블을 MONTHS_WORKED로 지정하시오.
+--      결과는 정수로 반올림하여 표시하시오.
+select last_name, round((sysdate - hire_date)/30) as MONTHS_WORKED
+from employees;
+
+--6. 모든 사원의 성 및 급여를 표시하기 위한 query를 작성합니다. 급여가 15자 길이로 표시되고 왼쪽에 $ 기호가 채워지도록 형식을 지정하시오. 
+--열 레이블을 SALARY 로 지정합니다.
+select last_name, LPAD(salary, 15, '$')
+from employees;
+
+--7. 부서 90의 모든 사원에 대해 성(last_name) 및 재직 기간(주 단위)을 표시하도록 query 를 작성하시오. 
+주를 나타내는 숫자 열의 레이블로 TENURE를 지정하고 주를 나타내는 숫자 값을 정수로 나타내시오.
+select last_name, round((sysdate - hire_date)/7) as TENURE
+from employees
+where department_id=90;
+
+--1. 각 사원에 대해 다음 항목을 생성하는 질의를 작성하고 열 레이블을 Dream Salaries로 지정하시오.
+--<employee last_name> earns <salary> monthly but wants <3 times salary>. 
+--<예시> Matos earns $2,600.00 monthly but wants $7,800.00.
+
+
+2. 사원의 이름, 입사일 및 급여 검토일을 표시하시오. 급여 검토일은 여섯 달이 경과한 후 첫번째 월요일입니다. 열 레이블을 REVIEW로 지정하고 날짜는 "2010.03.31 월요일"과 같은 형식으로 표시되도록 지정하시오.
+
+3. 이름, 입사일 및 업무 시작 요일을 표시하고 열 레이블을 DAY로 지정하시오. 월요일을 시작으로 해서 요일을 기준으로 결과를 정렬하시오.
+
+4. 사원의 이름과 커미션을 표시하는 질의를 작성하시오. 커미션을 받지 않는 사원일 경우 “No Commission”을 표시하시오. 열 레이블은 COMM으로 지정하시오.
+
+5. DECODE 함수와 CASE 구문을 사용하여 다음 데이터에 따라 JOB_ID 열의 값을 기준으로 모든 사원의 등급을 표시하는 질의를 작성하시오.
+
+업무         등급
+AD_PRES     A
+ST_MAN      B
+IT_PROG     C
+SA_REP      D
+ST_CLERK    E
+그외         0
+
