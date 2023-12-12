@@ -40,7 +40,8 @@ from employees;
 
 --데이터 그룹화--
 --1. group by절
-select department_id, avg(salary)
+--참고 블로그 : https://ajdahrdl.tistory.com/37
+select department_id, count(department_id), avg(salary)
 from employees
 group by department_id;
 
@@ -65,7 +66,7 @@ from employees
 group by department_id
 having max(salary)>10000;
 
--- 2.4 예시
+-- 2.3 예시
 select job_id, sum(salary) PAYROLL --5
 from employees --1
 where job_id not like '%REP%' --2
