@@ -408,3 +408,57 @@ and salary > (select salary
 select last_name
 from employees
 where last_name = 'Taylor';
+
+------------------------------복습때 모르는거------------------------------------------------------------------
+
+SELECT UPPER(last_name) "Upper Name", LENGTH(last_name) "Name Length"
+FROM employees
+WHERE UPPER(SUBSTR(last_name, 1, 1)) IN ('J', 'A', 'M')
+ORDER BY 1;
+
+--NVL2 함수
+--NVL2(expr1, expr2, expr3)
+-- => 1 = 널이 아니면 2 / 1 = 널이면 3
+--2, 3의 데이터 타입 통일해야 함
+SELECT last_name, salary, commission_pct,
+       NVL2(commission_pct, 'SAL+COMM', 'SAL') income
+FROM employees;
+
+--NULLIF(expr1, expr2)
+--두 표현식 비교 => 같으면 NULL, 다르면 expr1 반환
+SELECT first_name, LENGTH(first_name) "expr1",
+       last_name, LENGTH(last_name) "expr2",
+       NULLIF(LENGTH(first_name), LENGTH(last_name)) as result
+FROM employees;
+-----
+SELECT AVG(salary), MAX(salary), 
+       MIN(salary), SUM(salary)
+FROM   employees
+WHERE  job_id LIKE '%REP%';
+--like는 문자열에서 rep가 포함되어 있는걸 찾겠다는 거.
+--where절 : job_id에서 %REP% 문자열이 포함된 것을 찾겠다는 의미.
+
+-----
+--SELECT절에서 그룹함수 안에 없는열 => 반드시 GROUP BY절에 포함(필수)
+SELECT   department_id, AVG(salary)
+FROM     employees
+GROUP BY department_id;
+--SELECT절의 department_id열은 그룹함수(AVG) 안에 없음
+-- => ★★★GROUP BY절에 반드시 넣어줘야함
+
+--★★★GROUP BY 절에 있는 열 목록은 SELECT절에 안와도 됨(선택)
+SELECT   AVG(salary)
+FROM     employees
+GROUP BY department_id;
+--salary : GROUP BY 절에 없어도 됨
+
+select avg(NVL(commission_pct,0)), avg(commission_pct)
+--널 값을 강제로 0으로 포함. 뒤에껀 널값 제외.
+from employees;
+
+select job_id, sum(salary) PAYROLL --5
+from employees --1
+where job_id not like '%REP%' --2
+group by job_id --3
+having sum(salary) > 13000--4
+order by sum(salary);--6
