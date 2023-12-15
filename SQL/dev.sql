@@ -38,7 +38,7 @@ WHERE  student_number = '23-002';
 
 
 --books 테이블 생성
-CREATE TABLE books (
+CREATE TABLE book (
         book_code   VARCHAR2(10) PRIMARY KEY,
         book_name   VARCHAR(100) NOT NULL,
         author      VARCHAR(100),
@@ -46,17 +46,17 @@ CREATE TABLE books (
         book_cost   NUMBER DEFAULT 10000
         );
 
-INSERT INTO books
+INSERT INTO book
 VALUES      ('A001', '이것이 리눅스다', '우재남', '한빛미디어', 36000);
 
-INSERT INTO books
+INSERT INTO book
 VALUES      ('A002', '혼자 공부하는 자바', '신용권', '한빛미디어', 24000);
 
-INSERT INTO books
+INSERT INTO book
 VALUES      ('B001', '자바스크립트 파워북', '어포스트', '어포스트', 22000);
 
 SELECT   *
-FROM     books
+FROM     book
 ORDER BY 1;
 
 
@@ -71,15 +71,18 @@ CREATE TABLE travel_member (
         mem_rights   VARCHAR(100) default 'user'
         );
         
+insert into travel_member 
+values ('sujin', 'sujin', '이수진', 'admin');
 insert into travel_member
-values ('sujin', 'sujin', '이수진', '관리자');
-    insert into travel_member
-values ('user', 'user', '홍길동', '사용자');
+values ('user', 'user', '홍길동', 'user');
+
 select *
 from travel_member;
-    
+
+--delete from travel_plan;
+drop table travel_plan;
 create table travel_plan (
-       text_no number default 0,
+       text_no number,
        area_code  number default 053,
        travel_course VARCHAR(100) NOT NULL,
        use_time VARCHAR(100) NOT NULL,
@@ -89,11 +92,16 @@ create table travel_plan (
        text_hide char (1) --y/n로 구분
        );
        
+       create sequence text_auto_no
+       increment by 1
+       start with 1;
+       
 insert into travel_plan
-values (001, 053, '반월당 점심 투어', '3시간', '5만원', 'sujin', 0, 'y');
+values (text_auto_no.nextval, 053, '반월당 점심 투어', '3시간', '5만원', 'sujin', 0, 'y');
 
 select *
 from travel_plan;
+
 --drop table travel_comment;
 create table travel_comment (
        mem_id VARCHAR2(100),
