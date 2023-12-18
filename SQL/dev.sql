@@ -70,13 +70,16 @@ CREATE TABLE travel_member (
         mem_name    VARCHAR(100) not null,
         mem_rights   VARCHAR(100) default 'user'
         );
-        
+delete from travel_member;
+
 insert into travel_member 
 values ('sujin', 'sujin', '이수진', 'admin');
 insert into travel_member
-values ('user', 'user', '홍길동', 'user');
+values ('gildong', 'gildong', '홍길동', 'user');
 insert into travel_member
-values ('jaenam', 'jaenam', '홍길동', 'user');
+values ('jaenam', 'jaenam', '우재남', 'user');
+insert into travel_member
+values ('sohee', 'sohee', '한소희', 'user');
 
 select *
 from travel_member;
@@ -93,16 +96,29 @@ create table travel_plan (
        --travel_like number default 0,
        --text_hide char (1) --y/n로 구분
        );
+
+--목록 자동 생성 시퀀스     
+drop sequence text_auto_no;
+create sequence text_auto_no
+increment by 1
+start with 1;
        
-       drop sequence text_auto_no;
-       create sequence text_auto_no
-       increment by 1
-       start with 1;
+select *
+from travel_plan
+where text_no = 29;
+
        
 insert into travel_plan
-values (text_auto_no.nextval, 053, '반월당 점심 투어', '3시간', '5만원', 'sujin');
+values (text_auto_no.nextval, '053', '반월당 맛집', '3시간', '5만원', 'sujin');
 insert into travel_plan
-values (text_auto_no.nextval, 053, '반월당 저녁 투어', '3시간', '10만원', 'user');
+values (text_auto_no.nextval, '053', '반월당 종로', '3시간', '10만원', 'sohee');
+insert into travel_plan
+values (text_auto_no.nextval, '053', '수성못 투어', '3시간', '10만원', 'gildong');
+insert into travel_plan
+values (text_auto_no.nextval, '053', '혁신도시 투어', '3시간', '10만원', 'jaenam');
+insert into travel_plan
+values (text_auto_no.nextval, '053', '신세계 쇼핑', '3시간', '10만원', 'jaenam');
+
 
 select *
 from travel_plan;
