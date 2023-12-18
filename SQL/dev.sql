@@ -75,29 +75,34 @@ insert into travel_member
 values ('sujin', 'sujin', '이수진', 'admin');
 insert into travel_member
 values ('user', 'user', '홍길동', 'user');
+insert into travel_member
+values ('jaenam', 'jaenam', '홍길동', 'user');
 
 select *
 from travel_member;
 
---delete from travel_plan;
+delete from travel_plan;
 drop table travel_plan;
 create table travel_plan (
        text_no number,
-       area_code  number default 053,
+       area_code VARCHAR(100) NOT NULL,
        travel_course VARCHAR(100) NOT NULL,
        use_time VARCHAR(100) NOT NULL,
        use_money VARCHAR(100) NOT NULL,
-       mem_id VARCHAR2(100),
-       travel_like number default 0,
-       text_hide char (1) --y/n로 구분
+       mem_id VARCHAR2(100)
+       --travel_like number default 0,
+       --text_hide char (1) --y/n로 구분
        );
        
+       drop sequence text_auto_no;
        create sequence text_auto_no
        increment by 1
        start with 1;
        
 insert into travel_plan
-values (text_auto_no.nextval, 053, '반월당 점심 투어', '3시간', '5만원', 'sujin', 0, 'y');
+values (text_auto_no.nextval, 053, '반월당 점심 투어', '3시간', '5만원', 'sujin');
+insert into travel_plan
+values (text_auto_no.nextval, 053, '반월당 저녁 투어', '3시간', '10만원', 'user');
 
 select *
 from travel_plan;
